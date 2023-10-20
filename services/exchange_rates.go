@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 )
 
@@ -41,12 +40,12 @@ func (c CryptoExchangeRatesFetcher) GetExchangeRates(client *http.Client, apiEnd
 		return CryptoExchangeRates{}, fmt.Errorf("%v error occurred while attempting to fetch crypto exchange rates.", res.StatusCode)
 	}
 
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return CryptoExchangeRates{}, err
-	}
-
 	var exchangeRates CryptoExchangeRates
-	err = json.Unmarshal(body, &exchangeRates)
-	return exchangeRates, err
+	decoder := json.NewDecoder(res.Body)
+	err = decoder.Decode(&exchangeRates)
+	if err != nil {
+		return CryptoExchangeRates{}, fmt.Errorf("Failed to decode JSON: %w", err)
+	}
+	return exchangeRates, nil
+
 }

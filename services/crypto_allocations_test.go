@@ -31,12 +31,12 @@ func TestGetCryptoAllocations_HappyPath(t *testing.T) {
 
 	res, err := GetCryptoAllocations(mockFetcher, client, investmentAmount)
 	if err != nil {
-		t.Fatalf("Expected no error but got %v", err)
+		t.Fatalf("Expected no error but got %q", err)
 	}
 
 	parsedBtcAllocation, err := strconv.ParseFloat(res.BTC, 64)
 	if err != nil {
-		t.Errorf("Expected no error while parsing BTC allocation but got %v", err)
+		t.Errorf("Expected no error while parsing BTC allocation but got %q", err)
 	}
 	expectedBtcAllocation := 0.7 * 0.000025 * investmentAmount
 	if parsedBtcAllocation != expectedBtcAllocation {
@@ -45,7 +45,7 @@ func TestGetCryptoAllocations_HappyPath(t *testing.T) {
 
 	parsedEthAllocation, err := strconv.ParseFloat(res.ETH, 64)
 	if err != nil {
-		t.Errorf("Expected no error while parsing ETH allocation but got %v", err)
+		t.Errorf("Expected no error while parsing ETH allocation but got %q", err)
 	}
 
 	expectedEthAllocation := 0.3 * 0.00075 * investmentAmount
@@ -70,10 +70,10 @@ func TestGetCryptoAllocations_ExchangeRateError(t *testing.T) {
 		t.Fatalf("Expected an error but got none")
 	}
 	if allocations.BTC != "" {
-		t.Errorf(`Expected empty string for BTC allocation but got "%v"`, allocations.BTC)
+		t.Errorf(`Expected empty string for BTC allocation but got %q`, allocations.BTC)
 	}
 	if allocations.ETH != "" {
-		t.Errorf(`Expected empty string for ETH allocation but got "%v"`, allocations.ETH)
+		t.Errorf(`Expected empty string for ETH allocation but got %q`, allocations.ETH)
 	}
 }
 
@@ -102,6 +102,6 @@ func TestGetCryptoAllocations_InvalidData(t *testing.T) {
 	expectedError := `strconv.ParseFloat: parsing "Invalid data": invalid syntax`
 	_, err := GetCryptoAllocations(mockFetcher, client, investmentAmount)
 	if err.Error() != expectedError {
-		t.Errorf(`Expected "%v" but got "%v"`, expectedError, err.Error())
+		t.Errorf(`Expected %q but got %q`, expectedError, err)
 	}
 }
