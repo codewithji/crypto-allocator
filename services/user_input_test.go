@@ -45,6 +45,14 @@ func TestGetUserInvestmentInput(t *testing.T) {
 			errorMessage: "",
 		},
 		{
+			name:         "Unauthorized",
+			inputs:       []string{"12345"},
+			attempts:     0,
+			expected:     0,
+			expectError:  true,
+			errorMessage: "Unauthorized",
+		},
+		{
 			name:         "Reach max attempts",
 			inputs:       []string{"invalid", "-1", "0"},
 			attempts:     3,

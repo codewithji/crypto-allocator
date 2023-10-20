@@ -19,12 +19,16 @@ func (s *StdinReader) ReadInput() (string, error) {
 }
 
 func GetUserInvestmentInput(reader StringReader, attempts int) (float64, error) {
+	if attempts <= 0 {
+		return 0, errors.New("Unauthorized")
+	}
+
 	fmt.Printf("Welcome to Crypto Allocator!\n\n")
 	fmt.Printf("Tell us your investment amount in USD, and we'll let you know how much Bitcoin (BTC) and Ethereum (ETH) to buy. We allocate 70%% into BTC and 30%% into ETH based on current market rates from Coinbase.\n\n")
 
 	var investmentAmount float64
 
-	for attempts >= 0 {
+	for attempts > 0 {
 		attempts--
 
 		fmt.Print("Enter amount: ")
