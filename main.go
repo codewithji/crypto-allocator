@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/codewithji/crypto-allocator/services"
+	"github.com/joho/godotenv"
 )
 
 func getBanner(fileName string) (string, error) {
@@ -17,6 +18,12 @@ func getBanner(fileName string) (string, error) {
 	}
 
 	return string(banner), nil
+}
+
+func init() {
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("No .env file found")
+	}
 }
 
 func main() {

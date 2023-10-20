@@ -3,10 +3,9 @@ package services
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 )
-
-const apiEndpoint = "https://api.coinbase.com/v2/exchange-rates?currency=USD"
 
 type CryptoAllocations struct {
 	BTC string `json:"BTC"`
@@ -14,7 +13,14 @@ type CryptoAllocations struct {
 }
 
 func GetCryptoAllocations(fetcher ExchangeRatesFetcher, client *http.Client, investmentAmount float64) (CryptoAllocations, error) {
-	exchangeRates, err := fetcher.GetExchangeRates(client, apiEndpoint)
+	// The Coinbase API endpoint is public and does not require authentication
+	// Using an env variable is simply for demonstrative purposes
+
+	// Add the following to your local .env file if testing locally:
+	// API_URL=https://api.coinbase.com/v2/exchange-rates?currency=USD
+	apiUrl := os.Getenv("API_URL")
+
+	exchangeRates, err := fetcher.GetExchangeRates(client, apiUrl)
 	if err != nil {
 		return CryptoAllocations{}, err
 	}
