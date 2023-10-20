@@ -41,7 +41,7 @@ func GetUserInvestmentInput(reader StringReader, attempts int) (float64, error) 
 			if attempts == 0 {
 				return 0, errors.New("Reached max attempts. Please try again later.")
 			}
-			fmt.Printf("Invalid input. Please enter a number. (Attempts remaining: %v)\n\n", attempts)
+			fmt.Printf("%v\n\n", err)
 			continue
 		}
 

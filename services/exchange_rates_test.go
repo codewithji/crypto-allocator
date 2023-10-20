@@ -27,21 +27,21 @@ func TestGetExchangeRates_HappyPath(t *testing.T) {
 	fetcher := CryptoExchangeRatesFetcher{}
 	exchangeRates, err := fetcher.GetExchangeRates(client, server.URL)
 	if err != nil {
-		t.Fatalf("Expected no error but got %v", err)
+		t.Fatalf("Expected no error but got %q", err)
 	}
 
 	if exchangeRates.Data.Currency != "USD" {
-		t.Errorf("Expected currency to be USD but got %v", exchangeRates.Data.Currency)
+		t.Errorf("Expected currency to be USD but got %q", exchangeRates.Data.Currency)
 	}
 
 	expectedBTCRate := "0.0000351465991008"
 	if exchangeRates.Data.Rates.BTC != expectedBTCRate {
-		t.Errorf("Expected BTC rate %v but got %v", expectedBTCRate, exchangeRates.Data.Rates.BTC)
+		t.Errorf("Expected BTC rate %q but got %q", expectedBTCRate, exchangeRates.Data.Rates.BTC)
 	}
 
 	expectedETHRate := "0.0006380338349343"
 	if exchangeRates.Data.Rates.ETH != expectedETHRate {
-		t.Errorf("Expected ETH rate %v but got %v", expectedETHRate, exchangeRates.Data.Rates.ETH)
+		t.Errorf("Expected ETH rate %q but got %q", expectedETHRate, exchangeRates.Data.Rates.ETH)
 	}
 }
 
@@ -62,27 +62,27 @@ func TestGetExchangeRates_StatusCodes(t *testing.T) {
 
 		exchangeRates, err := fetcher.GetExchangeRates(client, server.URL)
 		if err == nil {
-			t.Fatalf("Expected error for status code %v but got none", statusCode)
+			t.Fatalf("Expected error for status code %q but got none", statusCode)
 		}
 
 		expectedErr := fmt.Errorf("%v error occurred while attempting to fetch crypto exchange rates.", statusCode)
 
 		if err.Error() != expectedErr.Error() {
-			t.Errorf(`Expected "%v" but got "%v"`, expectedErr, err)
+			t.Errorf(`Expected %q but got %q`, expectedErr, err)
 		}
 		if exchangeRates.Data.Currency != "" {
-			t.Errorf(`Expected empty string for Currency property but got "%v"`, exchangeRates.Data.Currency)
+			t.Errorf(`Expected empty string for Currency property but got %q`, exchangeRates.Data.Currency)
 		}
 		if exchangeRates.Data.Rates.BTC != "" {
-			t.Errorf(`Expected empty string for BTC rate property but got "%v"`, exchangeRates.Data.Rates.BTC)
+			t.Errorf(`Expected empty string for BTC rate property but got %q`, exchangeRates.Data.Rates.BTC)
 		}
 		if exchangeRates.Data.Rates.ETH != "" {
-			t.Errorf(`Expected empty string for ETH rate property but got "%v"`, exchangeRates.Data.Rates.ETH)
+			t.Errorf(`Expected empty string for ETH rate property but got %q`, exchangeRates.Data.Rates.ETH)
 		}
 	}
 }
 
-func TestGetExchangeRates_JsonUnmarshalError(t *testing.T) {
+func TestGetExchangeRates_JsonDecodeError(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`invalid json`))
@@ -93,9 +93,9 @@ func TestGetExchangeRates_JsonUnmarshalError(t *testing.T) {
 	fetcher := CryptoExchangeRatesFetcher{}
 
 	_, err := fetcher.GetExchangeRates(client, server.URL)
-	expectedErr := "invalid character 'i' looking for beginning of value"
+	expectedErr := "Failed to decode JSON: invalid character 'i' looking for beginning of value"
 
 	if err == nil || err.Error() != expectedErr {
-		t.Errorf("Expected error %q but got %v", expectedErr, err)
+		t.Errorf("Expected error %q but got %q", expectedErr, err)
 	}
 }

@@ -21,14 +21,14 @@ func getBanner(fileName string) (string, error) {
 
 func main() {
 	banner, err := getBanner("banner.txt")
-	if err == nil {
+	if err == nil && len(banner) > 0 {
 		fmt.Printf("%v\n\n", banner)
 	}
 
 	reader := services.StdinReader{}
 	investment, err := services.GetUserInvestmentInput(&reader, 3)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(err)
 		return
 	}
 
@@ -37,12 +37,14 @@ func main() {
 
 	cryptoAllocations, err := services.GetCryptoAllocations(fetcher, client, investment)
 	if err != nil {
-		fmt.Println("Error occurred while calculating crypto allocations")
+		fmt.Println("Failed to calculate crypto allocations: %w", err)
+		return
 	}
 
 	jsonData, err := json.Marshal(cryptoAllocations)
 	if err != nil {
-		fmt.Println("Error occurred while serializing crypto allocations data")
+		fmt.Println("Failed to serialize crypto allocations: %w", err)
+		return
 	}
 
 	fmt.Println(string(jsonData))

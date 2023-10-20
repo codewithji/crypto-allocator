@@ -63,14 +63,14 @@ func TestGetUserInvestmentInput(t *testing.T) {
 				if err == nil {
 					t.Errorf("Expected error but got none")
 				} else if err.Error() != tt.errorMessage {
-					t.Errorf(`Expected error message "%v" but got "%v"`, tt.errorMessage, err)
+					t.Errorf(`Expected error message %q but got %q`, tt.errorMessage, err)
 				}
 			} else if err != nil {
-				t.Errorf("Expected no error but got %v", err)
+				t.Errorf("Expected no error but got %q", err)
 			}
 
 			if investment != tt.expected {
-				t.Errorf(`Expected "%v" for investment input but got "%v"`, tt.expected, investment)
+				t.Errorf(`Expected %v for investment input but got %v`, tt.expected, investment)
 			}
 		})
 	}
